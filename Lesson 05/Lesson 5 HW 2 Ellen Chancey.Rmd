@@ -1,0 +1,98 @@
+---
+title: "Lesson 5 HW 2 Ellen Chancey"
+author: "Ellen Chancey"
+date: "September 23, 2018"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 3.15  
+For this table \(X^2\) = 11.5 with P = 0.24 where using scores (3,10,20,35) for income and (1,3,4,5) for job satisfaction. \(M^2\) = 7.04 with P = 0.008. Explain why the results are so different.  
+
+The results are quite different because the Pearson Likelhood ratio is detecting any pattern in the table, and because it aims to detect any departure from independence, it is not sensitive to a particular kind of departure, in this case from an ordinal variable. The linear trend alternative however aims to detect only departure from independence based on a directional association, so it is more sensitive to this trend. 
+
+How to obtain these values in R:
+
+Set Up
+```{r}
+job <- matrix(c(2,4,13,3,2,6,22,4,0,1,15,8,0,3,13,8), byrow = TRUE, nrow = 4)
+dimnames(job) <- list(income=c("<5", "5-15", "15-25", ">25"), 
+                      satisfaction=c("very dis", "little satis", "mod satis", "very satis"))
+job
+```
+
+\(\chi^2\) Pearson Likelihood Ratio
+```{r}
+chisq.test(job)
+```
+
+\(M^2\) Linear Trend Alternative
+```{r}
+library("vcdExtra")
+CMHtest(job, rscores = c(3,10,20,35), cscores = c(1,3,4,5))
+```
+
+
+
+
+## Question 3.17b 
+Use table 2.13. Obtain a 95% CI for gamma. Interpret the assocation.
+```{r}
+sex <- matrix(c(300,4,4,17,78,15,3,14,107,16,46,54,234,32,35,336), byrow = TRUE, nrow = 4)
+dimnames(sex) <- list(premarital=c("always", "almost always","sometimes", "not"), 
+                      homosexual=c("always", "almost always","sometimes", "not"))
+sex
+```
+
+```{r}
+library("DescTools")
+GoodmanKruskalGamma(sex, conf.level = 0.95)
+# -1 to +1 association, 0 indicates no association
+```
+The 95% CI for gamma is (0.6573527,0.7093064). This indicates that there is a very strong positive association between opinion on premarital sex and homosexual sex, as these values are close to 1. 
+
+
+## Additional Problem
+A study of hospitalized patients found that, among the subjects that were hospitalized for lung cancer the smoking histories defined by number of cigarettes per day (CPD) is in the following table.Using these data, assess whether CPD is associated with lung cancer using the Cochrane-Armitage test.  Interpret your results.  
+
+Set Up
+```{r}
+smoking <- matrix(c(7,55,489,475,293,38,61,129,570,431,154,12), byrow = TRUE, nrow = 2)
+dimnames(smoking) <- list(cancer=c("Lung", "Other"), 
+                            CPD=c("0", "<5", "5-14", "15-24", "25-49", "50+"))
+smoking
+```
+
+
+Cochran-Armitage Test
+```{r}
+library("DescTools")
+DescTools::CochranArmitageTest(smoking) 
+```
+The z statistic value of 11.368 indicates a moderate positive linear association between lung cancer and cigarettes per day with a significant p value.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Session Info
+```{r}
+sessionInfo()
+```
+

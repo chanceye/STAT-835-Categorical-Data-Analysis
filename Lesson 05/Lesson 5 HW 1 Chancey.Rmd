@@ -1,0 +1,133 @@
+---
+title: "Lesson 5 HW 1 Chancey"
+author: "Ellen Chancey"
+date: "September 22, 2018"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+ # My "procfreq" function: 
+"procfreq" <- function(x, digits=4) 
+        {
+          total <- sum(x)
+          rowsum <- apply(x,1,sum)
+          colsum <- apply(x,2,sum)
+          prop <- x/total
+          rowprop <- sweep(x,1,rowsum,"/")
+          colprop <- sweep(x,2,colsum,"/")
+          expected <- (matrix(rowsum) %*% t(matrix(colsum))) / total
+          dimnames(expected) <- dimnames(x)
+          resid <- (x-expected)/sqrt(expected)
+          adj.resid <- resid /
+          sqrt((1-matrix(rowsum)/total) %*% t(1-matrix(colsum)/total))
+          df <- prod(dim(x)-1)
+          X2 <- sum(resid^2)
+          attr(X2,"P-value") <- 1-pchisq(X2,df)
+          tmp <- x*log(x/expected)
+          tmp[x==0] <- 0
+          G2 <- 2 * sum(tmp)
+          attr(G2,"P-value") <- 1-pchisq(G2,df)
+          list(sample.size=total,
+          row.totals=rowsum,
+          col.totals=colsum,
+          overall.proportions=prop,
+          row.proportions=rowprop,
+          col.proportions=colprop,
+          expected.freqs=expected,
+          residuals=resid,
+          adjusted.residuals=adj.resid,
+          chi.square=X2,
+          likelihood.ratio.stat=G2,
+          df=df)
+        }
+
+```
+
+
+#### 3.11 parts a and b  
+
+Set Up
+```{r}
+raceparty <- matrix(c(192,75,8,459,586,471), byrow = TRUE, nrow = 2)
+dimnames(raceparty) <- list(race=c("Black", "White"), 
+                            party=c("Democrat", "Independent", "Republican"))
+raceparty
+```
+
+G Test
+```{r}
+library("DescTools")
+rpg <- GTest(raceparty)
+rpg
+```
+The \(G^2\) value of this contingency table is very high. This provides evidence to reject the null hypothesis, \(H_0: \pi_{ij} = \pi_{i+} \pi_{+j} \). The p-value indicates that this method will rarely reject the \(H_0\) when its true.  
+
+
+Standardized Residuals
+```{r}
+rppf<- procfreq(raceparty)
+rppf$adjusted.residuals
+```
+
+
+### Additional Problem 1  
+Investigators studied the relationship between stage of breast cancer at diagnosis (local or advance) and a woman’s living arrangement.  Of 144 women living alone, 41.0% had an advanced case; of 209 living with a spouse, 52.2% were advanced; and of 89 living with others, 59.6% were advanced.  The investigators reported their P-value for the relationship as 0.02 (Moritz and Satariano, J. Clin. Epidemiol. 45:443-454, 1993).  Reconstruct the analysis performed to obtain this P-value.
+
+Set Up
+```{r}
+cancer <- matrix(c(
+            round(144*.41),
+            round(209*.522),
+            round(89*.596),
+            round(144*.59),
+            round(209*.478),
+            round(89*.404)),
+            byrow = TRUE, 
+            nrow = 2)
+dimnames(cancer) <- list(stage=c("Advanced", "Local"), 
+                        living=c("Alone", "Spouse", "Others"))
+cancer <- t(cancer)
+cancer
+```
+
+Method One
+```{r}
+library(MASS)
+chisq.test(cancer)
+```
+
+Method Two
+```{r}
+cancerpf <- procfreq(cancer)
+cancerpf$chi.square
+```
+
+I assume that researchers round up, given that I obtain a p value of 0.015.  
+
+### Additional Problem 2  
+Table 3.13 (p 106) presents a contingency table for a sample of patients by their diagnosis and whether they were prescribed medication.  Obtain standardized Pearson residuals for the independence model.  Interpret these results.
+
+Set Up
+```{r}
+drug <- matrix(c(105,8,12,2,18,19,47,52,0,13), byrow = TRUE, nrow = 5)
+dimnames(drug) <- list(diagnosis=c("Schizophrenia", "Affective", "Neurosis", "Personality", "Special"), 
+                            drug=c("Yes", "No"))
+drug
+```
+
+
+```{r}
+chisq.test(drug, correct = TRUE)
+```
+The \(X^2\) value is 84.188 with a very small p value, well below 0.05. This result provides evidence to reject the null hypothesis - \(H_0: \pi_{ij} = \pi_{i+} \pi_{+j} \). The p-value indicates that this method will rarely reject the \(H_0\) when its true.  
+
+
+
+#### Session Info
+```{r}
+sessionInfo()
+```
+
