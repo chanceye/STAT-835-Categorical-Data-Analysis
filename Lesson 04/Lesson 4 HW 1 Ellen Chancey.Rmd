@@ -1,0 +1,47 @@
+---
+title: "Lesson 4 Homework 1 Ellen Chancey"
+author: "Ellen Chancey"
+date: "September 16, 2018"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+###Question 2.8  
+Odds against being the winning team were 9/2 for Spain, 11/2 for Brazil, 6/1 for England, and 90/1 for US.  
+Find corresponding prior probabilities of winning for these teams.  
+```{r}
+worldcup <- read.csv("worldcup.csv")
+print(worldcup)
+```
+
+
+  
+  
+###Question 2.14  
+Find the estimated odds ratio between opinion on global warming and whether one is a Democrat or Republican. Interpret.  
+```{r}
+# assign values
+repub <- 1
+indep <- repub*2.08
+dem <- indep*2.96
+
+
+# odds ratio
+or <- dem/repub
+or
+```
+
+The odds ratio indicates that for every one republican answering yes, there are about 6 democrats answering yes.
+
+
+
+```{r}
+sessionInfo()
+```
+

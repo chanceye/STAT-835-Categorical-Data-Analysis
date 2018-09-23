@@ -1,0 +1,77 @@
+---
+title: "Lesson 4 HW 2 EC"
+author: "Ellen Chancey"
+date: "September 16, 2018"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(fmsb)
+library(PropCIs)
+```
+
+###Question 3.3 a and c  
+
+####Part A  
+```{r}
+or<- oddsratio(60,2,44,61,conf.level = 0.95)
+#exposed is political positon and diseased is agree
+logOR <- log(or$estimate)
+logOR
+```
+
+####Part C
+```{r}
+# library(fmsb)
+# Estimate, confidence interval, and p value for odds ratio
+oddsratio(60,2,44,61,conf.level = 0.95)
+```
+
+
+```{r}
+# reccomended package doesn't come up with what the book says
+#library(PropCIs)
+orscoreci(60,(60+44),2,(2+61),conf.level=0.95)
+
+```
+
+The interval is imprecise because there are very few numbers of republicans who agreed.  
+
+
+
+###Question 3.4
+
+difference of proportions confidence interval
+```{r}
+wald2ci(1085,(1085+55623),703,(703+441239), conf.level=0.95, adjust = "Wald")
+```
+The difference of proportions confidence interval indicates that there is a difference in the proprotion of fatalities between those who do and do not wear a seatbelt.  
+The confidence level indicates that 95% of the time this method will produe a range that reflects the true parameter, in this case difference of proportion. In 5% of cases this methodology will produce an interval that does not reflect the true parameter.  
+
+
+relative risk confidence interval
+```{r}
+riskscoreci(1085,(1085+55623),703,(703+441239), conf.level=0.95)
+```
+The confidence interval of the relative risk indicates that the risk of fatality when not wearing a seatbelt is relatively higher than when wearing a seatbelt.
+The confidence level indicates that 95% of the time this method will produe a range that reflects the true parameter, in this case relative risk. In 5% of cases this methodology will produce an interval that does not reflect the true parameter.  
+
+
+oddsratio confidence interval
+```{r}
+#library(fmsb)
+oddsratio(1085,703,55623,441239,conf.level=0.95)
+```
+The odds ratio confidence interval indicates that those not wearing a seatbelt are 11.13 to 13.47 times more likely to experience a fatality.
+The confidence level indicates that 95% of the time this method will produe a range that reflects the true parameter, in this case the odds ratio In 5% of cases this methodology will produce an interval that does not reflect the true parameter.
+
+
+
+
+```{r}
+sessionInfo()
+```
+
