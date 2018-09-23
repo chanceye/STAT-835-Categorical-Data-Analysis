@@ -1,0 +1,62 @@
+---
+title: "Lesson 2 Homework Ellen Chancey"
+author: "Ellen Chancey"
+date: "August 31, 2018"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Question 1.5  
+People are surveyed with whether they think it should be possible for a pregnant woman to obtain a legal abortion if she is married and does not want any more children.
+```{r}
+yes <- 587
+no <- 636
+n <- yes + no
+pi <- yes/n
+```
+
+
+
+####Find the p-value for \(H_0: \pi = 0.50\) and construct 95% confidence interval
+
+```{r}
+binom.test(yes,n, p=0.5, conf.level = .95, alternative = "two.sided")
+```
+
+
+####Interpret the results  
+The confidence interval includes 0.50 and the p value is large, therefore the null hypothesis that \(\pi = 0.50\) cannot be rejected.
+
+
+
+
+## Additional Question
+A sample of 100 women who suffer from dysmenorrhea participated in a study.  A new analgesic is claimed to provide greater relief than a standard one.  After using each analgesic in a crossover experiment, 40 of the participants reported greater relief with the standard analgesic and 60 reported greater relief with the new analgesic.  Analyze these data.
+```{r}
+total <- 100
+standard <- 40
+new <- 60
+pi2 <- new/total
+```
+
+Null hypothesis test and confidence interval  
+\(H_0 : \pi = 0.50\)  
+\(H_1 : \pi <> 0.50\)
+```{r}
+binom.test(new,total, p=0.5, conf.level = .95, alternative = "two.sided")
+```
+
+####Interpret the results 
+This is a very border line result. A conservative approach would indicate that the null hypothesis cannot be rejected because the p value is more than 0.05 and because the confidence interval contains the value indicated in the null hyothesis.  
+
+
+####Session Info
+```{r}
+sessionInfo()
+```
+
