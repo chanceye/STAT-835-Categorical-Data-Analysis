@@ -1,0 +1,84 @@
+---
+title: "Week 1 HW Ellen Chancey"
+author: "Ellen Chancey"
+date: "August 25, 2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Question 1.2 
+100 questions on a multiple choice test. There are 4 options for each question, one is correct. A student randomly guesses on each question.  
+There are 100 trials, each with 2 possible outcomes - right or wrong. Each trial has a 0.25 probablity that the outcome is "correct".
+
+A. Specify the distribution of the number of correct answers  
+The distribution of outcomes is binomial because the answer is either wrong or right for each trial. Across 100 trials, there can be between 0 and 100 correct answers. 
+
+B. Find the mean and standard deviation of that distribtuion. Would it be surprising if the student made at least 50 correct responses? Why?  
+The mean of the binomial distribution is the \(E(y) = \pi n\).
+```{r}
+n <- 100 # trials
+p <- 0.25 # probablity that correct outcome is selected for one trial
+c <- 4 # number of outcomes
+mu <- p*n
+mu
+```
+
+The variance of the binomial distribution is \(\pi(1-\pi)\)
+```{r}
+var <- n*p*(1-p)
+var
+```
+
+It would be surprising for a student to obtain 50 correct response becase the mean + the standard deviation is 43.75. It is unlikely a student would obtain 50 correct answers given these statistics.
+```{r}
+low <- mu - var
+low
+high <- mu + var
+high
+```
+
+
+C. Specify the distribution of \((n_1,n_2,n_3,n_4)\) where \(n_j\) is the number of times the student picked choice \(j\).  
+
+```{r}
+
+```
+
+D. Find \(E(n_j)\) and \(var(n_j\). Show that \(cov(n_j,n_k) = -6.25\) and \(corr(n_j,n_k) = -0.333\)  
+```{r}
+
+```
+
+
+
+### Question 1.4  
+Russian roulette, where a bullet is placed in one of six chambers of a pistol, the chamber is spun and a random chamber is selected at random.  
+
+A. What is the probability of doing this six times where none of the trails results in a bullet firing?  
+The probability that in six trials, it never fires is 0.3348
+```{r}
+n <- 6 # number of trials
+y <- 0 # number of fires
+p <- 1/6 # probability that is fires in one trial
+prob <- (choose(n,y))*(p^y)*((1-p)^n-y)
+prob
+```
+
+
+### Supplemental Question  
+Find \(E(Y)\) and \(Var(Y)\) when \(Y=Poi(\mu)\)
+
+
+
+
+
+
+Session Info
+```{r}
+sessionInfo()
+```
