@@ -3,7 +3,7 @@ Course materials for categorical data analysis, fall 2018 term.
 
 Book for the course: https://mathdept.iut.ac.ir/sites/mathdept.iut.ac.ir/files/AGRESTI.PDF  
 Book website: http://users.stat.ufl.edu/~aa/cda/cda.html  
-* Most homework problems are from the book
+Full homework problems can be found in the book
 
 ### Lessons  
 01 - Probability  
