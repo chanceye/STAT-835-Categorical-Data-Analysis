@@ -1,8 +1,8 @@
 # STAT-835-Categorical-Data-Analysis
 Course materials for categorical data analysis, fall 2018 term.
 
-Book for the course: https://mathdept.iut.ac.ir/sites/mathdept.iut.ac.ir/files/AGRESTI.PDF
-Book website: http://users.stat.ufl.edu/~aa/cda/cda.html
+Book for the course: https://mathdept.iut.ac.ir/sites/mathdept.iut.ac.ir/files/AGRESTI.PDF  
+Book website: http://users.stat.ufl.edu/~aa/cda/cda.html  
 * Most homework problems are from the book
 
 ### Lessons  
