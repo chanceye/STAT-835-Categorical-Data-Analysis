@@ -13,3 +13,7 @@ Full homework problems can be found in the book
 04 - HW 2 - Confidence intervals on inference  
 05 - HW 1 - Chi square and G square tests of independence (association)  
 05 - HW 2 - Association test for ordinal variables, M squared linear alternative to independence, Goodman-Kruskal Gamma, and Cochran-Armitage
+06 - H1 1 - Small sample contingency tables
+07 - Mid term exam
+08 - Generalize CMH
+09 - Logistic regression
