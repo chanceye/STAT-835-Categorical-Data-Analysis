@@ -1,0 +1,193 @@
+---
+title: "Mid Term Exam"
+author: "Ellen Chancey"
+date: "October 6, 2018"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Question One  
+A 55 year old Kansas woman recently received her annual mammogram, and the results of this screening test indicated the presence of breast cancer.  The radiologist reading the film has a sensitivity rate for screening mammography of 85% and a specificity rate of 97%. If 1 in 1,000 women (ages 55 and older) have breast cancer, what is the probability that this 55 year old Kansas woman has cancer given the result of her mammogram? 
+
+Review probabilities
+```{r}
+cancerprob <- matrix(c(0.85,0.15,1.0,0.03,0.97, 1.0), byrow = TRUE, nrow = 2)
+dimnames(cancerprob) <- list(disease=c("Yes", "No"), 
+                            diagnosis=c("Yes", "No","Total"))
+cancerprob
+```
+
+Review calculated counts
+```{r}
+cancer <- matrix(c(8.5,1.5,10,300,9690,9990,308.5,9691.5,10000), byrow = TRUE, nrow = 3)
+dimnames(cancer) <- list(disease=c("Yes", "No", "Total"), 
+                          diagnosis=c("Yes", "No", "Total"))
+cancer
+             
+```
+
+The probability that the patient has cancer based on her positive diagnosis is 0.02755
+```{r}
+# P(disease = yes | diagnosis = yes )
+8.5/308.5
+```
+
+
+
+### Question Two  
+In a medical study that compared subjects with non-acute appendicitis and with acute appendicitis in terms of whether they suffered severe right abdominal pain. Such severe pain was reported by 5 of the 15 non-acute cases and by 1 of the 16 acute cases. The doctors believed that greater density of nerve fibres in the non-acute cases could increase the change of such pain. Conduct appropriate test and interpret your results.
+```{r}
+library(fmsb)
+or<- fmsb::oddsratio(5,1,15,16,conf.level = 0.95)
+#exposed is acute vs non acute, disease = yes pain
+or
+```
+The odds ratio for this case indicates that nonacute cases are 5.3 times more likely to experience pain. However, the p value and confidence interval indicate that this is not a strong conclusion. The p value fails to meet a 0.05 threshold, and the lower bound of the confidence interval (0.5567) is very small, and close to zero, which would indicate no association. Therefore, the \(H_0 : \theta  = 0\) cannot be rejected.
+
+
+### Question Three  
+Suicide has been the subject of increasing study in recent years, as psychologists struggle to understand the reasons that people choose to take their lives. Two questions in such studies concern the gender of the person committing suicide and the method chosen for doing so.Do women commit suicide at a higher rate than men, or is it the other way around? Are there differences by gender in the method used?  
+
+Here is a 2 by 4 contingency table that categorizes U.S. suicides in 1983 by gender and method ("hanging" also includes strangulation and suffocation). For instance, of the 28,295 suicides in the U.S. that year, 13,959 were by men using guns. 
+```{r}
+suicide <- matrix(c(13959,3148,3222,14557,21786,2641,2469,709,690,6509,16600,5617,3931,2147,28295), byrow = TRUE, nrow = 3)
+dimnames(suicide) <- list(gender=c("Male", "Female", "Total"), 
+                          method=c("Guns", "Poison","Hanging", "Other", "Total"))
+suicide
+```
+#### a.	Given that the numbers of men and women in the country are about equal, what does this say about the suicide rate among men as compared with women? Give an explicit numerical answer (for example, "Women are more than 5 times likelier than men to commit suicide," if that's correct). 
+
+```{r}
+# probability that a suicide is male
+maleprob <- 21786/28295
+maleprob
+# probability that a suicide is female
+femaleprob <- 6509/28295
+femaleprob
+```
+Without knowledge of the overall rate of suicide in the population, the odds ratio cannot be calculated. What can be calculated is conditional probability of gender based on the fact that a suicide occured. If a suicide occured, there is a probability of `r maleprob` that it was a male, while there is only a  `r femaleprob` that it was a female.  
+
+
+#### b.	Is there a difference between men and women in the chosen method of suicide? Conduct an appropriate hypothesis test. 
+```{r}
+suicide_chi <- chisq.test(suicide)
+suicide_chi
+```
+According to the Pearson \(\chi^2\) statistic, with \(H_0:\) all \(\pi_i\) are the same, \(H_0\) is rejected. There is an association between gender and method of suicide, with an estimate of 14327, and a signifcant p value.  
+
+#### c.	What are the risk difference, relative risk, and odds ratio of committing suicides by gun (using gun or not using gun) for male vs female? Provides the 95% CIs.  
+
+##### Risk Difference
+```{r}
+gunrd <- fmsb::riskdifference(13959,2641,21786,6509, conf.level = 0.95)
+gunrd
+```
+The risk difference is `r gunrd$estimate` with a sufficiently small p value and 95% confidence interval `r gunrd$conf.int`.  
+
+##### Relative Risk
+```{r}
+gunrr <- fmsb::riskratio(13959,2641,21786,6509, conf.level = 0.95)
+gunrr
+```
+The relative risk is `r gunrr$estimate` with a sufficiently small p value and 95% confidence interval `r gunrr$conf.int`.  
+
+##### Odds Ratio
+```{r}
+gunor <- fmsb::oddsratio(13959,2641,(3148+3222+1457),(2469+709+690),conf.level = 0.95)
+# exposed = male, disease = gun, nondisease = not gun
+gunor
+```
+The odds ratio for gun vs other method is `r gunor$estimate`, with a pvalue significantly small p value and a 95% confidence interval of `r gunor$conf.int`.   
+
+
+
+### Question Four  
+A study on educational aspirations of high school students (S. Crysdale, Int. J. Compar. Social. 16: 19-36, 1975) measured aspirations with the scale (some high school, high school graduate, some college, college graduate). The student counts in these categories were (9, 44, 13, 10) when family income was low, (11, 52, 23, 22) when family income was middle, and (9, 41, 12, 27) when family income was high.  
+
+```{r}
+ed_income <- matrix(c(9,44,13,10,11, 52, 23, 22,9, 41, 12, 27), byrow = TRUE, nrow = 3)
+dimnames(ed_income ) <- list(income=c("low", "middle", "high"), 
+                          educ=c("some hs", "hs grad", "some col", "col grad"))
+ed_income
+```
+
+
+#### a.	Test independence of educational aspirations and family income using odds ratio. Explain the deficiency of this test for these data.  
+```{r}
+ed_or <- epitools::oddsratio.wald(ed_income)
+ed_or
+ed_or$measure[2]
+```
+This method is not sufficient because both variables are ordinal, and a linear relationship may be present, and should be tested for.  
+
+#### b.	Find the standardized Pearson residuals. Do they suggest any association pattern? Why?  
+```{r}
+ed_chisq <- chisq.test(ed_income)
+ed_chisq$stdres
+```
+The standardized pearson residuals suggest that many cells are significantly different from what is expected under the \(H_0\), and therefore an association exists. This method takes into consideration the ordinal nature of the variables, so an association is clear.  
+
+
+#### c.	Conduct an alternative test that may be more power. Interpret. 
+```{r}
+library("DescTools")
+DescTools::GoodmanKruskalGamma(ed_income, conf.level = 0.95)
+# -1 to +1 association, 0 indicates no association
+```
+The alternative test used here calculated gamma, with an estimate of 0.1625. The 95% CI for gamma is (0.0067,0.3184). This indicates that there is a modest positive association between income and aspirational education.  
+
+
+### Question Five  
+Breast cancer is one of the most common malignancies among women in the U.S. If it is detected early enough-before the cancer spreads-chances of successful treatment are much better. The question is, do screening programs speed up detection enough to matter?   
+The first large-scale experiment to answer this question was run by a group called the Health Insurance Plan (HIP) of Greater New York, starting in 1963. The subjects (all members of this plan) were 62,000 women age 40 to 64, who were divided at random into two equal groups. In the treatment group, the women were encouraged to come in for annual screening, including a breast examination by a doctor and a mammogram (a kind of X-ray). About 20,200 women in the treatment group did come in for the screening, but 10,800 refused. The control group was offered standard health care that did not include the examination and mammogram. All the women were followed for many years; results for the first 5 years are shown below. 
+
+```{r}
+cancer_exam <- read.csv("cancer_exam.csv")
+print(cancer_exam)
+```
+Does screening cause a decrease in breast cancer mortality? Conduct appropriate analysis using given data. You may ignore the fact that some women refused the treatment and use 31000 as the total sample size for treatment group. 
+
+```{r}
+cancer_exam <- read.csv("cancer_exam2.csv")
+cancer_exam
+```
+
+```{r eval = FALSE}
+screen <- fmsb::oddsratio(39,63,30961,30937,conf.level = 0.95)
+# exposed = male, disease = gun, nondisease = not gun
+screen
+
+```
+The odds ratio estimate is 0.6186 with a p value of 0.0174and 95% confidence interval of 0.4148, 0.9225 which suggests that there is a strong association between treatment and mortality.
+
+To understand the association better, a standardized Pearson residual will be considered.
+```{r}
+
+screen<- matrix(c(39,30961,63,30937), byrow = TRUE, nrow = 2)
+dimnames(screen) <- list(treatment=c("exam", "no exam"), 
+                          mortality=c("yes", "no"))
+
+screen_chisq <- chisq.test(screen)
+screen_chisq$stdres
+```
+These results indicate that if the two variables were independent there would have been 2.37 more mortalities in the treatment group than what was observed.  
+
+
+#### In reality, it is very common that the data is not exactly as planned (missing data, noncompliance etc). Discuss what may be appropriate to do with “Refused” cases.  
+
+I would combine the refused and control groups. My rationale for this is that the critical intervention being applied to the test group is the exam and mammogram, not the encouragement to get them. From this perspective, they did not receive the treatment. 
+The argument for treating them as their own group is also worth considering.This method ensures that any potential impact of being encouraged to obtain an exam and/or unwillingness to obtain an exam would be accounted for.
+
+
+
+
+### Session Info
+```{r}
+sessionInfo()
+```
+
