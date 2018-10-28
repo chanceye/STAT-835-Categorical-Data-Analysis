@@ -1,0 +1,110 @@
+---
+title: "Lecture 15 HW"
+author: "Ellen Chancey"
+date: "October 28, 2018"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Logistic Regression  
+This homework is based on problems listed in Categorical Data Analysis second edition by Alan Agresti, which can be found [here](https://mathdept.iut.ac.ir/sites/mathdept.iut.ac.ir/files/AGRESTI.PDF)
+
+## Question 5.6  
+Context: There were 23 space shuttle flights before the Challenger mission disaster in 1986. The dataset used here shows the temperature at the time of flight and whether at least one primary o-ring suffered thermal distress.
+
+### Read in data  
+ft : flight number  
+temp : temp at time of flight  
+td : thermal distress, yes (1) or no(0)
+```{r}
+chal <- read.csv("challenger.csv")
+chal$td <- as.factor(chal$td)
+print(chal)
+```
+
+Plot data before modeling
+```{r}
+require("FSA")
+plotBinResp(chal$temp,chal$td, plot.p=FALSE)
+```
+
+### Part A  
+Use logistic regression to model the effect of temperature on the probability of thermal distress. Plot a figure of the fitted model. Interpret.
+```{r}
+model <- glm(td~temp, data = chal, family = "binomial")
+summary(model)
+```
+
+Intercept estimate \(\hat\alpha\) is 18.9598 with p value of 0.037. The std error, 9.1344 and z stat of 2.076 can be used to calculate confidence intervals for the estimate.  
+The temperature estimate \(\hat\beta\) is -0.2898 with a p value of 0.0306. The std error 0.1340 and z stat of -2.162 can be used to calculate confidence intervals for the estimate. The sufficiently small p value indicates that there is evidence to reject the null hypothesis, \(H_0: \beta = 0\), meaning there is a statistically significant relationship between temperature and thermal distress.
+
+The model is: \(\hat\Omega(x) =\hat\alpha+\hat\beta x\)  
+The model using model estimates:\(\hat\Omega(x) = 18.96 + 9.13x\)  
+
+\(\hat\beta\) indicates the amount that the log odds changes for each one degree increase in temperature. A \(\hat\beta\) value of 9.13 indicates that for each 1 unit increase in temperature, the log odds increase by 9.13.
+
+#### Converting to Odds Ratios
+```{r}
+exp(coef(model))
+# exponentiates the coefficients from the object model
+```
+This indicates that the odds of thermal distress increase by 7.48 for a one unit increase in temperature.
+
+### Part B  
+Estimate the probability of thermal distress at 31 degrees, the temperature at the time of the Challenger flight.  
+
+First we estimate the log odds
+```{r}
+alpha <- model$coefficients[1]
+beta <- model$coefficients[2]
+estlo <- alpha+(beta*31)
+estlo
+```
+
+Next convert the log odds to the probability
+```{r}
+pi <- (exp(estlo))/(1+exp(estlo))
+pi
+```
+ 
+The estimated probability of thermal distress when temperature is 31 is `r pi`.
+
+
+### Part C  
+Construct a confidence interval for the effect of temperature on the odds of thermal distress, and test the statistical significance of the effect.  
+
+Confidence interval
+```{r}
+confint.default(model)
+```
+
+The statistical signifcance of the effect of temperature on thermal distress can be found as the p value for the temp estimate, and is 0.306.
+
+```{r}
+summary(model)
+```
+
+
+### Extra Content
+
+#### Calculating confidence intervals  
+There are two functions that can be used to find confidence intervals, one used standard error, while the other uses log likelihood.
+```{r}
+confint(model) # uses log likelihood
+confint.default(model) # uses std errors
+```
+
+
+#### Reference material
+https://stats.idre.ucla.edu/r/dae/logit-regression/
+
+#### Session Information
+```{r}
+sessionInfo()
+```
+
