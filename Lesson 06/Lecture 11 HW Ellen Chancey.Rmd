@@ -1,0 +1,68 @@
+---
+title: "Lecture 11 HW"
+author: "Ellen Chancey"
+date: "September 29, 2018"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+### Question 3.19  
+A study in the department of wildlife ecology sampled wild common carp fish from a wetland in central Chile. One analysis investigated whether the fish muscle had lead pollutant and whether there was evidenct malformation in the fish. Of 25 fish without lead, 7 had malformation. Of 14 with lead, 7 had malformation. Report and interpret the p value for Fisher's exact test for a one sided alternative of a greater chance of malformation when there is lead pollution.
+```{r}
+fish <- matrix(c(7,7,7,18), byrow = TRUE, nrow = 2)
+dimnames(fish) <- list(lead=c("yes", "no"), 
+                       malform=c("yes", "no"))
+fish
+```
+
+
+```{r}
+fisher.test(fish, alternative = "greater", conf.level = 0.95)
+```
+Indicates that the probability of a table with a larger number of malformation in fish with lead is 0.1526.  
+
+
+
+### Additional Problem  
+A contingency table for two independent binomial variables where Y=1 denotes success and Y=2 failure has three of three successes in row one and zero of three successes in row two.  For H0: Pi_1<=Pi_2  versus Pi_1>Pi_2 , show that the p-value for the unconditional exact test equals 1/64 and for Fisher’s exact test equal 1/20.  (Hint: see p 94, which has H0: Pi_1=Pi_2.)
+```{r}
+ex <- matrix(c(3,0,0,3), byrow = TRUE, nrow = 2)
+dimnames(ex) <- list(x=c("a","b"),
+                     y=c("success","fail"))
+ex
+```
+
+Unconditional Exact Test
+```{r}
+library("Exact")
+exact.test(ex, alternative="greater")
+```
+
+
+Fisher's Test
+```{r}
+fisher.test(ex,alternative = "greater", conf.level = 0.95)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+### Session Info
+```{r}
+sessionInfo()
+```
+
