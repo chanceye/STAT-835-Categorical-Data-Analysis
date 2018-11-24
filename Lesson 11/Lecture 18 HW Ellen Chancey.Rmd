@@ -1,0 +1,57 @@
+---
+title: "Leture 18 HW"
+author: "Ellen Chancey"
+date: "November 23, 2018"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 6.16  
+Refer to table 2.6. Use CMH stat to test indepdence of death penalty verdict and victim's race, controlling for defendant's race. Conduct another test of this hypothesis and compare the results.  
+
+Read in Data
+```{r}
+
+deathpenalty <- read.csv("deathpenalty.csv")
+print(deathpenalty)
+```
+
+Convert data to a table to put in the CMH function
+```{r}
+table <- xtabs(count ~  defendant + dp + victim, data = deathpenalty)
+ftable(table) # display a flattened table, outcome will be a row
+```
+
+
+Calculate CMH stat
+```{r}
+mantelhaen.test(table)
+```
+
+
+Do some other hypothesis test
+Woolf Test for homogeneity of OR across strata
+```{r}
+require(vcd)
+woolf_test(table)
+```
+
+
+Review the results  
+The CMH test found significance, while the Woolf test did not. This indicates that the CMH is the appropriate test to use in this instance.
+
+
+
+#### Reference Material
+http://rcompanion.org/handbook/H_06.html
+
+
+```{r}
+sessionInfo()
+```
+
